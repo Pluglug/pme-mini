@@ -1,0 +1,222 @@
+# PME mini - Design Experiment for PME2
+# Strict configuration - no legacy concerns
+
+[project]
+name = "pme_mini"
+version = "0.1.0"
+description = "PME2 design experiment - minimal prototype for testing architecture patterns"
+readme = "CLAUDE.md"
+requires-python = ">=3.12"  # Blender 5.0+ uses Python 3.12
+license = { text = "GPL-3.0-or-later" }
+authors = [
+    { name = "Pluglug" }
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Environment :: Plugins",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+]
+
+# No runtime dependencies (Blender provides everything)
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "black>=25.1.0",
+    "ruff>=0.8.0",
+    "pyright>=1.1.390",
+    "pre-commit>=4.0.0",
+    "fake-bpy-module-latest>=20250108",  # Blender type stubs
+]
+test = [
+    "pytest>=8.0.0",
+    "pytest-cov>=6.0.0",
+]
+
+# ============================================================================
+# uv Configuration
+# ============================================================================
+
+[tool.uv]
+dev-dependencies = [
+    "black>=25.1.0",
+    "ruff>=0.8.0",
+    "pyright>=1.1.390",
+    "pre-commit>=4.0.0",
+    "fake-bpy-module-latest>=20250108",
+]
+
+# ============================================================================
+# Ruff - Strict Configuration
+# ============================================================================
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+# Enable all rules, then selectively disable
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # Pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+    "ARG",    # flake8-unused-arguments
+    "SIM",    # flake8-simplify
+    "TCH",    # flake8-type-checking
+    "PTH",    # flake8-use-pathlib
+    "RUF",    # Ruff-specific rules
+    "N",      # pep8-naming
+    "ANN",    # flake8-annotations
+    "S",      # flake8-bandit (security)
+    "COM",    # flake8-commas
+    "D",      # pydocstyle
+    "PL",     # Pylint
+    "PERF",   # Perflint
+    "RET",    # flake8-return
+    "SLF",    # flake8-self
+    "ERA",    # eradicate (commented-out code)
+    "TRY",    # tryceratops
+]
+
+ignore = [
+    # Allow self/cls without type annotations (Blender convention)
+    "ANN101",  # Missing type annotation for self
+    "ANN102",  # Missing type annotation for cls
+
+    # Docstring placement preferences
+    "D203",    # 1 blank line required before class docstring
+    "D213",    # Multi-line docstring summary should start at the second line
+
+    # These conflict with Blender's PropertyGroup patterns
+    "ANN401",  # Dynamically typed expressions (Any) are disallowed
+
+    # Allow TODO comments during development
+    "FIX002",  # Line contains TODO
+
+    # Blender API requires specific exception patterns
+    "TRY003",  # Avoid specifying long messages outside the exception class
+]
+
+[tool.ruff.lint.per-file-ignores]
+# __init__.py files often need unused imports for re-export
+"__init__.py" = ["F401", "F403"]
+# Test files can have different rules (if we add tests later)
+"test_*.py" = ["S101", "ANN", "D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["pme_mini"]
+force-single-line = false
+lines-after-imports = 2
+
+# ============================================================================
+# Black - Code Formatting
+# ============================================================================
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+include = '\.pyi?$'
+extend-exclude = '''
+(
+  /__pycache__/
+  | \.git/
+  | \.venv/
+)
+'''
+
+# ============================================================================
+# Pyright - Strict Configuration
+# ============================================================================
+
+[tool.pyright]
+pythonVersion = "3.12"
+pythonPlatform = "All"
+typeCheckingMode = "strict"
+
+# Blender stubs (fake-bpy-module or blender-stubs)
+stubPath = "./typings"
+reportMissingTypeStubs = "warning"
+
+# Strict type checking
+reportUnusedImport = "error"
+reportUnusedVariable = "error"
+reportUnusedClass = "error"
+reportUnusedFunction = "error"
+reportDuplicateImport = "error"
+reportPrivateUsage = "error"
+reportTypeCommentUsage = "error"
+reportConstantRedefinition = "error"
+reportIncompatibleMethodOverride = "error"
+reportIncompatibleVariableOverride = "error"
+reportInconsistentConstructor = "error"
+reportOverlappingOverload = "error"
+reportMissingSuperCall = "warning"
+reportUninitializedInstanceVariable = "warning"
+reportInvalidStringEscapeSequence = "error"
+reportUnknownParameterType = "warning"
+reportUnknownArgumentType = "warning"
+reportUnknownLambdaType = "warning"
+reportUnknownVariableType = "warning"
+reportUnknownMemberType = "warning"
+reportMissingParameterType = "warning"
+reportMissingTypeArgument = "warning"
+reportCallInDefaultInitializer = "error"
+reportUnnecessaryIsInstance = "warning"
+reportUnnecessaryCast = "warning"
+reportUnnecessaryComparison = "warning"
+reportUnnecessaryContains = "warning"
+reportAssertAlwaysTrue = "error"
+reportSelfClsParameterName = "error"
+reportImplicitStringConcatenation = "warning"
+reportInvalidStubStatement = "error"
+reportIncompleteStub = "warning"
+reportUnsupportedDunderAll = "error"
+reportUnusedCallResult = "none"  # Many Blender ops return values we ignore
+
+# ============================================================================
+# pytest (for future use)
+# ============================================================================
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+
+# ============================================================================
+# Coverage (for future use)
+# ============================================================================
+
+[tool.coverage.run]
+source = ["pme_mini"]
+omit = [
+    "*/__pycache__/*",
+    "*/tests/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+]
+
+# ============================================================================
+# Bandit - Security Linting
+# ============================================================================
+
+[tool.bandit]
+exclude_dirs = ["tests", "__pycache__"]
+skips = [
+    "B101",  # assert_used - we use assert for type narrowing
+]

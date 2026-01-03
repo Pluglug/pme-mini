@@ -1,0 +1,10 @@
+# PME mini - Claude Code ignore patterns
+# Clean slate project - minimal exclusions
+
+# Cache and build artifacts
+__pycache__/
+*.pyc
+.venv/
+
+# Generated files
+uv.lock
