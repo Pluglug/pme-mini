@@ -33,17 +33,9 @@ repos:
         language_version: python3.12
 
   # ===========================================================================
-  # Python linting - Ruff
-  # ===========================================================================
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.6
-    hooks:
-      - id: ruff
-        args: ['--fix', '--exit-non-zero-on-fix']
-
-  # ===========================================================================
   # DISABLED: Run manually when needed
   # ===========================================================================
+  # Ruff (too strict for prototype): ruff check --fix .
   # Pyright (slow): pyright .
   # Docformatter (broken v1.7.5): docformatter -r --in-place .
   # Bandit (needs config): bandit -r .
