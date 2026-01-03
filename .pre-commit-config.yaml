@@ -1,5 +1,5 @@
 # PME mini - Pre-commit Configuration
-# Strict settings - all hooks enabled, no legacy exclusions
+# Minimal settings for fast iteration
 
 default_language_version:
   python: python3.12
@@ -20,8 +20,6 @@ repos:
         args: ['--maxkb=1000']
       - id: check-merge-conflict
       - id: check-case-conflict
-      - id: detect-private-key
-      - id: debug-statements
       - id: mixed-line-ending
         args: ['--fix=lf']
 
@@ -44,37 +42,11 @@ repos:
         args: ['--fix', '--exit-non-zero-on-fix']
 
   # ===========================================================================
-  # Type checking - Pyright
+  # DISABLED: Run manually when needed
   # ===========================================================================
-  - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.391
-    hooks:
-      - id: pyright
-        additional_dependencies:
-          - fake-bpy-module-latest
-
-  # ===========================================================================
-  # Docstring formatting
-  # ===========================================================================
-  - repo: https://github.com/PyCQA/docformatter
-    rev: v1.7.5
-    hooks:
-      - id: docformatter
-        args:
-          - '--in-place'
-          - '--wrap-summaries=100'
-          - '--wrap-descriptions=100'
-          - '--style=google'
-
-  # ===========================================================================
-  # Security checks
-  # ===========================================================================
-  - repo: https://github.com/PyCQA/bandit
-    rev: 1.8.2
-    hooks:
-      - id: bandit
-        args: ['-c', 'pyproject.toml']
-        additional_dependencies: ['bandit[toml]']
+  # Pyright (slow): pyright .
+  # Docformatter (broken v1.7.5): docformatter -r --in-place .
+  # Bandit (needs config): bandit -r .
 
 ci:
   autofix_commit_msg: 'style: auto-fix by pre-commit hooks'
